@@ -2,6 +2,16 @@ import { useState, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Camera, Loader2 } from "lucide-react";
 
 interface ProfileEditorProps {
   onClose: () => void;
@@ -12,6 +22,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const updateProfile = useMutation(api.users.updateProfile);
@@ -22,14 +33,13 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
+      reader.onloadend = () => setPreviewUrl(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
 
   const handleSave = async () => {
+    setSaving(true);
     try {
       let avatarId = profile?.avatarId;
 
@@ -41,9 +51,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
           body: selectedImage,
         });
         const json = await result.json();
-        if (!result.ok) {
-          throw new Error(`Upload failed: ${JSON.stringify(json)}`);
-        }
+        if (!result.ok) throw new Error(`Upload failed: ${JSON.stringify(json)}`);
         avatarId = json.storageId;
       }
 
@@ -52,86 +60,95 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
         avatarId,
       });
 
-      toast.success("Profile updated successfully!");
+      toast.success("Profile updated!");
       onClose();
     } catch (error) {
       console.error("Failed to update profile:", error);
       toast.error("Failed to update profile");
+    } finally {
+      setSaving(false);
     }
   };
 
+  const avatarSrc = previewUrl || profile?.avatarUrl || "";
+  const initials = (profile?.displayName || "U")[0].toUpperCase();
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
-          >
-            ×
-          </button>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="bg-card border-border max-w-sm p-0 gap-0
+        shadow-2xl shadow-black/40 animate-fade-in">
+        <div className="h-24 rounded-t-lg bg-gradient-to-br from-primary/30 via-primary/10 to-transparent relative">
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+            <div className="relative group">
+              <Avatar className="h-20 w-20 ring-4 ring-card">
+                {avatarSrc && <AvatarImage src={avatarSrc} alt="Profile" />}
+                <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                onClick={() => imageInputRef.current?.click()}
+                className="absolute inset-0 rounded-full bg-black/50 opacity-0
+                  group-hover:opacity-100 transition-opacity duration-200
+                  flex items-center justify-center cursor-pointer"
+              >
+                <Camera className="h-5 w-5 text-white" />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex flex-col items-center">
-            <div className="mb-4">
-              {previewUrl || profile?.avatarUrl ? (
-                <img
-                  src={previewUrl || profile?.avatarUrl || ""}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-32 h-32 rounded-full bg-purple-500 flex items-center justify-center text-white text-4xl font-semibold">
-                  {(profile?.displayName || "U")[0].toUpperCase()}
-                </div>
-              )}
-            </div>
-            <input
-              type="file"
-              ref={imageInputRef}
-              onChange={handleImageSelect}
-              accept="image/*"
-              className="hidden"
-            />
-            <button
-              onClick={() => imageInputRef.current?.click()}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-            >
-              Change Photo
-            </button>
-          </div>
+        <div className="px-6 pt-14 pb-6 space-y-6">
+          <DialogHeader className="text-center">
+            <DialogTitle className="font-display text-lg">Edit Profile</DialogTitle>
+          </DialogHeader>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <input
+            type="file"
+            ref={imageInputRef}
+            onChange={handleImageSelect}
+            accept="image/*"
+            className="hidden"
+          />
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Display Name
             </label>
-            <input
-              type="text"
+            <Input
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder={profile?.displayName || "Enter your name"}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
+              className="h-11 bg-secondary border-border text-foreground
+                placeholder:text-muted-foreground focus-visible:ring-primary/50
+                focus-visible:border-primary"
             />
           </div>
 
-          <div className="flex space-x-3">
-            <button
+          <div className="flex gap-3">
+            <Button
               onClick={handleSave}
-              className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+              disabled={saving}
+              className="flex-1 h-10 font-display font-semibold text-sm
+                glow-primary hover:glow-primary-strong transition-all duration-300"
             >
-              Save Changes
-            </button>
-            <button
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+            <Button
+              variant="outline"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              className="flex-1 h-10 border-border hover:bg-accent
+                hover:border-primary/30 transition-all duration-200"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
