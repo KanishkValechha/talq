@@ -2,42 +2,155 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-light: #ffffff;
-  --color-dark: #171717;
+@layer base {
+  :root {
+    --background: 240 15% 5%;
+    --foreground: 240 10% 95%;
+    --card: 240 14% 8%;
+    --card-foreground: 240 10% 95%;
+    --popover: 240 14% 8%;
+    --popover-foreground: 240 10% 95%;
+    --primary: 250 85% 68%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 12% 14%;
+    --secondary-foreground: 240 10% 78%;
+    --muted: 240 12% 14%;
+    --muted-foreground: 240 10% 55%;
+    --accent: 240 14% 16%;
+    --accent-foreground: 240 10% 90%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 12% 16%;
+    --input: 240 12% 18%;
+    --ring: 250 85% 68%;
+    --radius: 0.625rem;
+    --sidebar: 240 16% 6%;
+    --sidebar-foreground: 240 10% 85%;
+    --sidebar-active: 240 14% 14%;
+    --sidebar-muted: 240 10% 45%;
+    --sidebar-border: 240 12% 12%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
 }
 
-.accent-text {
-  @apply text-slate-600;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-body {
-  font-family:
-    "Inter Variable",
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
-  color: var(--color-dark);
-  background: var(--color-light);
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* only use this to update the style of the auth input fields. use a different class for all other input fields */
+::-webkit-scrollbar-thumb {
+  background: hsl(240 12% 20%);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(240 12% 28%);
+}
+
+/* Noise texture overlay for atmosphere */
+.noise-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Glow effect utility */
+.glow-primary {
+  box-shadow: 0 0 20px hsl(250 85% 68% / 0.15),
+    0 0 40px hsl(250 85% 68% / 0.05);
+}
+
+.glow-primary-strong {
+  box-shadow: 0 0 20px hsl(250 85% 68% / 0.3),
+    0 0 60px hsl(250 85% 68% / 0.1);
+}
+
+/* Gradient mesh for sign-in page */
+.gradient-mesh {
+  background: radial-gradient(
+      ellipse at 20% 50%,
+      hsl(250 85% 68% / 0.12) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 80% 20%,
+      hsl(280 70% 55% / 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 60% 80%,
+      hsl(220 80% 55% / 0.06) 0%,
+      transparent 50%
+    ),
+    hsl(240 15% 5%);
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+/* Auth form styles */
 .auth-input-field {
-  @apply w-full px-4 py-3 rounded-container bg-white border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow shadow-sm hover:shadow;
+  @apply w-full h-12 px-4 rounded-lg bg-secondary border border-border
+    text-foreground placeholder:text-muted-foreground
+    focus:border-primary focus:ring-1 focus:ring-primary/50
+    outline-none transition-all duration-200;
 }
 
-/* only use this to update the style of the auth buttons. use the button class for all other buttons */
 .auth-button {
-  @apply w-full px-4 py-3 rounded bg-primary text-white font-semibold hover:bg-primary-hover transition-colors shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply w-full h-12 px-4 rounded-lg font-display font-semibold text-sm
+    bg-primary text-primary-foreground
+    hover:brightness-110 active:brightness-95
+    transition-all duration-200 glow-primary
+    disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Online indicator pulse */
+.online-pulse {
+  position: relative;
+}
+
+.online-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  background: hsl(160 60% 50% / 0.4);
+  animation: pulse-soft 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Typing indicator dots */
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Smooth transitions for interactive elements */
+.interactive {
+  @apply transition-all duration-200 ease-out;
+}
+
+.interactive:hover {
+  @apply brightness-110;
 }
