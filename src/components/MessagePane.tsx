@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
@@ -11,9 +11,16 @@ import { MessageSquare, Hash, AtSign } from "lucide-react";
 interface MessagePaneProps {
   channelId: Id<"channels"> | null;
   dmUserId: Id<"users"> | null;
+  highlightMessageId?: Id<"messages"> | null;
+  onHighlightSeen?: () => void;
 }
 
-export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
+export function MessagePane({
+  channelId,
+  dmUserId,
+  highlightMessageId,
+  onHighlightSeen,
+}: MessagePaneProps) {
   const channelMessages = useQuery(
     api.messages.listByChannel,
     channelId ? { channelId } : "skip"
@@ -26,6 +33,12 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
   const markAsRead = useMutation(api.messages.markAsRead);
   const currentUser = useQuery(api.auth.loggedInUser);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  const setMessageRef = useCallback((id: string, el: HTMLDivElement | null) => {
+    if (el) messageRefs.current.set(id, el);
+    else messageRefs.current.delete(id);
+  }, []);
 
   const typingUsers = useQuery(
     api.typing.getTypingUsers,
@@ -37,8 +50,26 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
   );
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!highlightMessageId) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, highlightMessageId]);
+
+  useEffect(() => {
+    if (highlightMessageId && messages) {
+      const el = messageRefs.current.get(highlightMessageId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("message-highlight-flash");
+        const t = setTimeout(() => {
+          el.classList.remove("message-highlight-flash");
+          onHighlightSeen?.();
+        }, 2000);
+        return () => clearTimeout(t);
+      }
+      onHighlightSeen?.();
+    }
+  }, [highlightMessageId, messages, onHighlightSeen]);
 
   useEffect(() => {
     if (messages && currentUser) {
@@ -69,9 +100,10 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
             return (
               <div
                 key={message._id}
+                ref={(el) => setMessageRef(message._id, el)}
                 className={`flex w-full ${isOwn ? "justify-end" : "justify-start"} ${
                   showAvatar && idx > 0 ? "mt-3" : ""
-                }`}
+                } rounded-lg transition-all duration-300`}
               >
                 <MessageBubble
                   message={message}

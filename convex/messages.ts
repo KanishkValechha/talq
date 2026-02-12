@@ -192,11 +192,18 @@ export const search = query({
           channelName = channel?.name || null;
         }
 
+        let dmOtherUserId = null;
+        if (message.dmParticipants) {
+          dmOtherUserId =
+            message.dmParticipants.find((id) => id !== userId) ?? null;
+        }
+
         return {
           ...message,
           authorName: profile?.displayName || author?.email || "Unknown",
           avatarUrl,
           channelName,
+          dmOtherUserId,
         };
       })
     );

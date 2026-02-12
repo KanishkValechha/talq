@@ -37,6 +37,7 @@ function AuthenticatedApp() {
   const [selectedChannel, setSelectedChannel] = useState<Id<"channels"> | null>(null);
   const [selectedDM, setSelectedDM] = useState<Id<"users"> | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [highlightMessageId, setHighlightMessageId] = useState<Id<"messages"> | null>(null);
   const updatePresence = useMutation(api.users.updatePresence);
 
   useEffect(() => {
@@ -44,6 +45,20 @@ function AuthenticatedApp() {
     const interval = setInterval(() => updatePresence(), 60000);
     return () => clearInterval(interval);
   }, [updatePresence]);
+
+  const handleSearchResultClick = ({
+    channelId,
+    dmUserId,
+    messageId,
+  }: {
+    channelId: Id<"channels"> | null;
+    dmUserId: Id<"users"> | null;
+    messageId: Id<"messages">;
+  }) => {
+    setSelectedChannel(channelId);
+    setSelectedDM(dmUserId);
+    setHighlightMessageId(messageId);
+  };
 
   return (
     <SidebarProvider>
@@ -61,9 +76,14 @@ function AuthenticatedApp() {
         onShowProfile={() => setShowProfile(true)}
       />
       <SidebarInset className="h-svh flex flex-col relative z-10">
-        <Header />
+        <Header onSearchResultClick={handleSearchResultClick} />
         <div className="flex-1 flex overflow-hidden">
-          <MessagePane channelId={selectedChannel} dmUserId={selectedDM} />
+          <MessagePane
+            channelId={selectedChannel}
+            dmUserId={selectedDM}
+            highlightMessageId={highlightMessageId}
+            onHighlightSeen={() => setHighlightMessageId(null)}
+          />
         </div>
       </SidebarInset>
       {showProfile && (

@@ -8,8 +8,17 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "../hooks/use-theme";
+import { Id } from "../../convex/_generated/dataModel";
 
-export function Header() {
+interface HeaderProps {
+  onSearchResultClick?: (params: {
+    channelId: Id<"channels"> | null;
+    dmUserId: Id<"users"> | null;
+    messageId: Id<"messages">;
+  }) => void;
+}
+
+export function Header({ onSearchResultClick }: HeaderProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -89,7 +98,18 @@ export function Header() {
         </div>
 
         {showResults && searchTerm && (
-          <SearchResults results={searchResults} />
+          <SearchResults
+            results={searchResults}
+            onSelect={(result) => {
+              setSearchTerm("");
+              setShowResults(false);
+              onSearchResultClick?.({
+                channelId: result.channelId ?? null,
+                dmUserId: result.dmOtherUserId ?? null,
+                messageId: result._id,
+              });
+            }}
+          />
         )}
       </div>
 
@@ -114,15 +134,23 @@ export function Header() {
 }
 
 interface SearchResult {
-  _id: string;
+  _id: Id<"messages">;
   _creationTime: number;
   content: string;
   authorName: string;
   avatarUrl: string | null;
   channelName: string | null;
+  channelId?: Id<"channels">;
+  dmOtherUserId?: Id<"users"> | null;
 }
 
-function SearchResults({ results }: { results: SearchResult[] | undefined }) {
+function SearchResults({
+  results,
+  onSelect,
+}: {
+  results: SearchResult[] | undefined;
+  onSelect: (result: SearchResult) => void;
+}) {
   if (!results) {
     return (
       <div className="absolute top-full mt-2 w-full bg-card border border-border
@@ -149,11 +177,13 @@ function SearchResults({ results }: { results: SearchResult[] | undefined }) {
     <div className="absolute top-full mt-2 w-full bg-card border border-border
       rounded-xl shadow-2xl max-h-80 overflow-y-auto">
       {results.map((result, i) => (
-        <div
+        <button
+          type="button"
           key={result._id}
-          className={`flex items-start gap-3 p-3 hover:bg-accent/50
+          onClick={() => onSelect(result)}
+          className={`flex items-start gap-3 p-3 hover:bg-accent/50 w-full text-left
             transition-colors opacity-0 animate-fade-in stagger-${Math.min(i + 1, 5)}
-            ${i > 0 ? "border-t border-border/50" : ""}`}
+            cursor-pointer ${i > 0 ? "border-t border-border/50" : ""}`}
         >
           <Avatar className="h-7 w-7 flex-shrink-0">
             {result.avatarUrl && <AvatarImage src={result.avatarUrl} />}
@@ -179,7 +209,7 @@ function SearchResults({ results }: { results: SearchResult[] | undefined }) {
               {new Date(result._creationTime).toLocaleString()}
             </span>
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );
