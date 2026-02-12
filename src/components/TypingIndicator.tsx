@@ -13,7 +13,7 @@ export function TypingIndicator({ users }: TypingIndicatorProps) {
         : `${users[0]} and ${users.length - 1} others are typing`;
 
   return (
-    <div className="flex items-center gap-2 px-5 py-2 animate-fade-in">
+    <div className="flex items-center gap-2 px-3 md:px-5 py-2 animate-fade-in">
       <div className="flex items-center gap-1">
         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-typing-dot typing-dot" />
         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-typing-dot typing-dot" />

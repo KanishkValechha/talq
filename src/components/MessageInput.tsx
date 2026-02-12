@@ -51,7 +51,7 @@ export function MessageInput({ channelId, dmUserId }: MessageInputProps) {
   };
 
   return (
-    <div className="px-5 pb-5 pt-2">
+    <div className="px-2 md:px-5 pb-3 md:pb-5 pt-2">
       <form
         onSubmit={handleSend}
         className="relative bg-secondary/60 border border-border rounded-xl

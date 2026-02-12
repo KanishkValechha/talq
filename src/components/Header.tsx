@@ -4,6 +4,8 @@ import { api } from "../../convex/_generated/api";
 import { SignOutButton } from "../SignOutButton";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search, X } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,10 +45,13 @@ export function Header() {
 
   return (
     <header className="h-14 bg-card/80 backdrop-blur-md border-b border-border
-      flex items-center justify-between px-5 relative z-20">
+      flex items-center px-3 md:px-5 gap-2 relative z-20">
+      <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground" />
+      <Separator orientation="vertical" className="h-5 hidden md:block" />
+
       <div ref={searchRef} className="flex-1 max-w-xl mx-auto relative">
         <div className="relative group">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4
+          <Search className="absolute left-3 md:left-3.5 top-1/2 -translate-y-1/2 h-4 w-4
             text-muted-foreground group-focus-within:text-primary transition-colors" />
           <input
             ref={inputRef}
@@ -58,7 +63,7 @@ export function Header() {
             }}
             onFocus={() => setShowResults(true)}
             placeholder="Search messages..."
-            className="w-full h-9 pl-10 pr-20 rounded-lg bg-secondary/60 border border-border
+            className="w-full h-9 pl-9 md:pl-10 pr-10 md:pr-20 rounded-lg bg-secondary/60 border border-border
               text-sm text-foreground placeholder:text-muted-foreground
               focus:bg-secondary focus:border-primary/40 focus:ring-1 focus:ring-primary/20
               outline-none transition-all duration-200"
@@ -72,7 +77,7 @@ export function Header() {
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
-            <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded
+            <kbd className="hidden md:inline-flex h-5 items-center gap-0.5 rounded
               border border-border bg-accent/50 px-1.5 font-mono text-[10px]
               text-muted-foreground">
               <span className="text-xs">&#8984;</span>K
@@ -85,7 +90,7 @@ export function Header() {
         )}
       </div>
 
-      <div className="ml-4 flex-shrink-0">
+      <div className="ml-2 md:ml-4 flex-shrink-0">
         <SignOutButton />
       </div>
     </header>

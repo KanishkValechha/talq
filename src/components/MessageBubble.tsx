@@ -19,23 +19,23 @@ interface MessageBubbleProps {
 export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps) {
   return (
     <div
-      className={`flex items-end gap-2 px-4 py-1.5 ${
+      className={`flex items-end gap-1.5 md:gap-2 px-2 md:px-4 py-1 md:py-1.5 ${
         isOwn ? "flex-row-reverse" : ""
       }`}
     >
       {!isOwn && showAvatar && (
-        <Avatar className="h-8 w-8 flex-shrink-0 mb-1">
+        <Avatar className="h-6 w-6 md:h-8 md:w-8 flex-shrink-0 mb-1">
           {message.avatarUrl && (
             <AvatarImage src={message.avatarUrl} alt={message.authorName} />
           )}
-          <AvatarFallback className="bg-primary/15 text-primary text-xs font-bold">
+          <AvatarFallback className="bg-primary/15 text-primary text-[10px] md:text-xs font-bold">
             {message.authorName[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
       )}
 
       <div
-        className={`max-w-[75%] px-4 py-2.5 rounded-2xl shadow-sm ${
+        className={`max-w-[85%] md:max-w-[75%] px-3 md:px-4 py-2 md:py-2.5 rounded-2xl shadow-sm ${
           isOwn
             ? "bg-primary text-primary-foreground rounded-br-md"
             : "bg-muted text-foreground rounded-bl-md"

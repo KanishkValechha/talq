@@ -3,12 +3,13 @@ import { api } from "../convex/_generated/api";
 import { SignInForm } from "./SignInForm";
 import { Toaster } from "sonner";
 import { useState, useEffect } from "react";
-import { Sidebar } from "./components/Sidebar";
+import { AppSidebar } from "./components/Sidebar";
 import { MessagePane } from "./components/MessagePane";
 import { Header } from "./components/Header";
 import { ProfileEditor } from "./components/ProfileEditor";
 import { Id } from "../convex/_generated/dataModel";
 import { MessageSquare, Zap, Shield, Users } from "lucide-react";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 export default function App() {
   return (
@@ -42,28 +43,30 @@ function AuthenticatedApp() {
   }, [updatePresence]);
 
   return (
-    <div className="h-screen flex flex-col relative z-10">
-      <Header />
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar
-          selectedChannel={selectedChannel}
-          selectedDM={selectedDM}
-          onSelectChannel={(id) => {
-            setSelectedChannel(id);
-            setSelectedDM(null);
-          }}
-          onSelectDM={(id) => {
-            setSelectedDM(id);
-            setSelectedChannel(null);
-          }}
-          onShowProfile={() => setShowProfile(true)}
-        />
-        <MessagePane channelId={selectedChannel} dmUserId={selectedDM} />
-      </div>
+    <SidebarProvider>
+      <AppSidebar
+        selectedChannel={selectedChannel}
+        selectedDM={selectedDM}
+        onSelectChannel={(id) => {
+          setSelectedChannel(id);
+          setSelectedDM(null);
+        }}
+        onSelectDM={(id) => {
+          setSelectedDM(id);
+          setSelectedChannel(null);
+        }}
+        onShowProfile={() => setShowProfile(true)}
+      />
+      <SidebarInset className="h-svh flex flex-col relative z-10">
+        <Header />
+        <div className="flex-1 flex overflow-hidden">
+          <MessagePane channelId={selectedChannel} dmUserId={selectedDM} />
+        </div>
+      </SidebarInset>
       {showProfile && (
         <ProfileEditor onClose={() => setShowProfile(false)} />
       )}
-    </div>
+    </SidebarProvider>
   );
 }
 
