@@ -69,7 +69,7 @@ export function MessageInput({ channelId, dmUserId }: MessageInputProps) {
           rows={1}
           className="w-full resize-none bg-transparent text-sm text-foreground
             placeholder:text-muted-foreground px-4 py-3 pr-14
-            outline-none min-h-[44px] max-h-32"
+            outline-hidden min-h-[44px] max-h-32"
         />
         <div className="absolute right-2 bottom-2 flex items-center">
           <Button

@@ -78,7 +78,7 @@ export function Header({ onSearchResultClick }: HeaderProps) {
             className="w-full h-9 pl-9 md:pl-10 pr-10 md:pr-20 rounded-lg bg-secondary/60 border border-border
               text-sm text-foreground placeholder:text-muted-foreground
               focus:bg-secondary focus:border-primary/40 focus:ring-1 focus:ring-primary/20
-              outline-none transition-all duration-200"
+              outline-hidden transition-all duration-200"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {searchTerm && (
@@ -113,7 +113,7 @@ export function Header({ onSearchResultClick }: HeaderProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-1 ml-2 md:ml-4 flex-shrink-0">
+      <div className="flex items-center gap-1 ml-2 md:ml-4 shrink-0">
         <Button
           variant="ghost"
           size="icon"
@@ -185,7 +185,7 @@ function SearchResults({
             transition-colors opacity-0 animate-fade-in stagger-${Math.min(i + 1, 5)}
             cursor-pointer ${i > 0 ? "border-t border-border/50" : ""}`}
         >
-          <Avatar className="h-7 w-7 flex-shrink-0">
+          <Avatar className="h-7 w-7 shrink-0">
             {result.avatarUrl && <AvatarImage src={result.avatarUrl} />}
             <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
               {result.authorName[0]?.toUpperCase()}

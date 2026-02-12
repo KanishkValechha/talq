@@ -128,7 +128,7 @@ export function AppSidebar({
                       onClick={() => handleSelectChannel(ch._id)}
                       tooltip={ch.name}
                     >
-                      <Hash className={`h-3.5 w-3.5 flex-shrink-0 ${selectedChannel === ch._id ? "text-primary" : ""}`} />
+                      <Hash className={`h-3.5 w-3.5 shrink-0 ${selectedChannel === ch._id ? "text-primary" : ""}`} />
                       <span className="truncate">{ch.name}</span>
                     </SidebarMenuButton>
                     {ch.unreadCount > 0 && (
@@ -205,7 +205,7 @@ export function AppSidebar({
 
 function OnlineDot({ online }: { online: boolean }) {
   return (
-    <span className="relative flex-shrink-0">
+    <span className="relative shrink-0">
       <span className={`block w-2 h-2 rounded-full ${online ? "bg-emerald-400" : "bg-muted-foreground/40"}`} />
       {online && <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400/40 animate-pulse-soft" />}
     </span>

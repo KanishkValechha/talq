@@ -25,7 +25,7 @@ export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps
     >
       {/* Avatar for other users */}
       {!isOwn && showAvatar ? (
-        <Avatar className="h-7 w-7 flex-shrink-0 mb-1">
+        <Avatar className="h-7 w-7 shrink-0 mb-1">
           {message.avatarUrl && (
             <AvatarImage src={message.avatarUrl} alt={message.authorName} />
           )}
@@ -34,7 +34,7 @@ export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps
           </AvatarFallback>
         </Avatar>
       ) : !isOwn ? (
-        <div className="w-7 flex-shrink-0" />
+        <div className="w-7 shrink-0" />
       ) : null}
 
       {/* Message bubble */}
@@ -51,7 +51,7 @@ export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps
           </div>
         )}
 
-        <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">
+        <p className="text-[14px] leading-relaxed whitespace-pre-wrap wrap-break-word">
           {message.content}
         </p>
 

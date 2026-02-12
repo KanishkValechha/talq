@@ -77,7 +77,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-card border-border max-w-sm p-0 gap-0
         shadow-xl animate-fade-in">
-        <div className="h-20 rounded-t-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent relative">
+        <div className="h-20 rounded-t-lg bg-linear-to-br from-primary/20 via-primary/5 to-transparent relative">
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
             <div className="relative group">
               <Avatar className="h-20 w-20 ring-4 ring-card">
