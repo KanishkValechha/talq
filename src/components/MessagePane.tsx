@@ -65,13 +65,18 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
               prevMsg.authorId !== message.authorId ||
               message._creationTime - prevMsg._creationTime > 300000;
 
+            const isOwn = currentUser?._id === message.authorId;
             return (
-              <MessageBubble
+              <div
                 key={message._id}
-                message={message}
-                isOwn={currentUser?._id === message.authorId}
-                showAvatar={showAvatar}
-              />
+                className={`flex w-full ${isOwn ? "justify-end" : "justify-start"}`}
+              >
+                <MessageBubble
+                  message={message}
+                  isOwn={isOwn}
+                  showAvatar={showAvatar}
+                />
+              </div>
             );
           })}
           <TypingIndicator users={typingUsers} />
