@@ -76,8 +76,8 @@ export function AppSidebar({
     <ShadcnSidebar>
       <SidebarHeader className="h-14 px-5 flex-row items-center border-b border-sidebar-border">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-sidebar-primary/15 flex items-center justify-center border border-sidebar-primary/20">
-            <MessageSquare className="h-3.5 w-3.5 text-sidebar-primary" />
+          <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
+            <MessageSquare className="h-3.5 w-3.5 text-primary" />
           </div>
           <h2 className="font-display font-bold text-sidebar-foreground text-sm tracking-tight">
             Talq
@@ -89,7 +89,7 @@ export function AppSidebar({
         {/* Channels */}
         <SidebarGroup>
           <SidebarGroupLabel
-            className="cursor-pointer select-none text-sidebar-muted hover:text-sidebar-foreground"
+            className="cursor-pointer select-none text-sidebar-muted hover:text-sidebar-foreground transition-colors"
             onClick={() => setChannelsOpen(!channelsOpen)}
           >
             {channelsOpen ? (
@@ -128,12 +128,12 @@ export function AppSidebar({
                       onClick={() => handleSelectChannel(ch._id)}
                       tooltip={ch.name}
                     >
-                      <Hash className={`h-3.5 w-3.5 flex-shrink-0 ${selectedChannel === ch._id ? "text-sidebar-primary" : ""}`} />
+                      <Hash className={`h-3.5 w-3.5 flex-shrink-0 ${selectedChannel === ch._id ? "text-primary" : ""}`} />
                       <span className="truncate">{ch.name}</span>
                     </SidebarMenuButton>
                     {ch.unreadCount > 0 && (
                       <SidebarMenuBadge>
-                        <Badge className="h-5 min-w-5 px-1.5 border-0 text-[10px] font-bold bg-sidebar-primary/20 text-sidebar-primary hover:bg-sidebar-primary/20">
+                        <Badge className="h-5 min-w-5 px-1.5 border-0 text-[10px] font-bold bg-primary/20 text-primary hover:bg-primary/20">
                           {ch.unreadCount}
                         </Badge>
                       </SidebarMenuBadge>
@@ -150,7 +150,7 @@ export function AppSidebar({
         {/* Direct Messages */}
         <SidebarGroup>
           <SidebarGroupLabel
-            className="cursor-pointer select-none text-sidebar-muted hover:text-sidebar-foreground"
+            className="cursor-pointer select-none text-sidebar-muted hover:text-sidebar-foreground transition-colors"
             onClick={() => setDmsOpen(!dmsOpen)}
           >
             {dmsOpen ? (

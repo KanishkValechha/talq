@@ -3,15 +3,18 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { SignOutButton } from "../SignOutButton";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Search, X } from "lucide-react";
+import { Search, X, Sun, Moon } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "../hooks/use-theme";
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { resolvedTheme, toggleTheme } = useTheme();
   const searchResults = useQuery(
     api.messages.search,
     searchTerm.trim() ? { searchTerm } : "skip"
@@ -90,7 +93,20 @@ export function Header() {
         )}
       </div>
 
-      <div className="ml-2 md:ml-4 flex-shrink-0">
+      <div className="flex items-center gap-1 ml-2 md:ml-4 flex-shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          className="h-8 w-8 text-muted-foreground hover:text-foreground
+            hover:bg-accent transition-all duration-200"
+        >
+          {resolvedTheme === "dark" ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+        </Button>
         <SignOutButton />
       </div>
     </header>
@@ -110,7 +126,7 @@ function SearchResults({ results }: { results: SearchResult[] | undefined }) {
   if (!results) {
     return (
       <div className="absolute top-full mt-2 w-full bg-card border border-border
-        rounded-xl shadow-2xl shadow-black/30 p-6 text-center">
+        rounded-xl shadow-2xl p-6 text-center">
         <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
           <div className="w-1 h-1 rounded-full bg-primary animate-pulse-soft" />
           <div className="w-1 h-1 rounded-full bg-primary animate-pulse-soft stagger-2" />
@@ -123,7 +139,7 @@ function SearchResults({ results }: { results: SearchResult[] | undefined }) {
   if (results.length === 0) {
     return (
       <div className="absolute top-full mt-2 w-full bg-card border border-border
-        rounded-xl shadow-2xl shadow-black/30 p-6 text-center">
+        rounded-xl shadow-2xl p-6 text-center">
         <p className="text-sm text-muted-foreground">No messages found</p>
       </div>
     );
@@ -131,7 +147,7 @@ function SearchResults({ results }: { results: SearchResult[] | undefined }) {
 
   return (
     <div className="absolute top-full mt-2 w-full bg-card border border-border
-      rounded-xl shadow-2xl shadow-black/30 max-h-80 overflow-y-auto">
+      rounded-xl shadow-2xl max-h-80 overflow-y-auto">
       {results.map((result, i) => (
         <div
           key={result._id}

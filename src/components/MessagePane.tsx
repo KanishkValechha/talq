@@ -57,7 +57,7 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
   return (
     <div className="flex-1 flex flex-col bg-background min-w-0">
       <ScrollArea className="flex-1">
-        <div className="py-4">
+        <div className="py-3">
           {messages?.map((message, idx) => {
             const prevMsg = messages[idx - 1];
             const showAvatar =
@@ -69,7 +69,9 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
             return (
               <div
                 key={message._id}
-                className={`flex w-full ${isOwn ? "justify-end" : "justify-start"}`}
+                className={`flex w-full ${isOwn ? "justify-end" : "justify-start"} ${
+                  showAvatar && idx > 0 ? "mt-3" : ""
+                }`}
               >
                 <MessageBubble
                   message={message}
@@ -92,10 +94,10 @@ export function MessagePane({ channelId, dmUserId }: MessagePaneProps) {
 function EmptyState() {
   return (
     <div className="flex-1 flex items-center justify-center bg-background">
-      <div className="text-center animate-fade-in">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl
-          bg-accent/50 border border-border mb-5">
-          <MessageSquare className="h-7 w-7 text-muted-foreground" />
+      <div className="text-center animate-fade-in px-6">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
+          bg-accent border border-border mb-5">
+          <MessageSquare className="h-6 w-6 text-muted-foreground" />
         </div>
         <h3 className="text-lg font-display font-semibold text-foreground mb-2">
           Pick a conversation

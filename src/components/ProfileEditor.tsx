@@ -76,13 +76,13 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-card border-border max-w-sm p-0 gap-0
-        shadow-2xl shadow-black/40 animate-fade-in">
-        <div className="h-24 rounded-t-lg bg-gradient-to-br from-primary/30 via-primary/10 to-transparent relative">
+        shadow-xl animate-fade-in">
+        <div className="h-20 rounded-t-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent relative">
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
             <div className="relative group">
               <Avatar className="h-20 w-20 ring-4 ring-card">
                 {avatarSrc && <AvatarImage src={avatarSrc} alt="Profile" />}
-                <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+                <AvatarFallback className="bg-primary/15 text-primary text-2xl font-bold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
@@ -130,7 +130,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
               onClick={handleSave}
               disabled={saving}
               className="flex-1 h-10 font-display font-semibold text-sm
-                glow-primary hover:glow-primary-strong transition-all duration-300"
+                transition-all duration-300"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -142,7 +142,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
               variant="outline"
               onClick={onClose}
               className="flex-1 h-10 border-border hover:bg-accent
-                hover:border-primary/30 transition-all duration-200"
+                transition-all duration-200"
             >
               Cancel
             </Button>

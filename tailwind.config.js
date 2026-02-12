@@ -62,6 +62,14 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				ring: 'hsl(var(--sidebar-ring))'
   			},
+  			'msg-own': {
+  				DEFAULT: 'hsl(var(--msg-own))',
+  				foreground: 'hsl(var(--msg-own-foreground))'
+  			},
+  			'msg-other': {
+  				DEFAULT: 'hsl(var(--msg-other))',
+  				foreground: 'hsl(var(--msg-other-foreground))'
+  			},
   			emerald: {
   				'400': '#34d399',
   				'500': '#10b981'

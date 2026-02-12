@@ -55,7 +55,7 @@ export function SignInForm() {
           type="submit"
           disabled={submitting}
           className="w-full h-12 font-display font-semibold text-sm
-            glow-primary hover:glow-primary-strong transition-all duration-300"
+            transition-all duration-300"
         >
           {flow === "signIn" ? (
             <>
@@ -93,7 +93,7 @@ export function SignInForm() {
       <Button
         variant="outline"
         className="w-full h-12 font-display font-medium text-sm
-          border-border hover:bg-accent hover:border-primary/30
+          border-border hover:bg-accent
           transition-all duration-300"
         onClick={() => void signIn("anonymous")}
       >

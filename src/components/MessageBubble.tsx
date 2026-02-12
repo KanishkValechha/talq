@@ -19,26 +19,30 @@ interface MessageBubbleProps {
 export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps) {
   return (
     <div
-      className={`flex items-end gap-1.5 md:gap-2 px-2 md:px-4 py-1 md:py-1.5 ${
+      className={`flex items-end gap-2 px-3 md:px-4 py-0.5 md:py-1 ${
         isOwn ? "flex-row-reverse" : ""
       }`}
     >
-      {!isOwn && showAvatar && (
-        <Avatar className="h-6 w-6 md:h-8 md:w-8 flex-shrink-0 mb-1">
+      {/* Avatar for other users */}
+      {!isOwn && showAvatar ? (
+        <Avatar className="h-7 w-7 flex-shrink-0 mb-1">
           {message.avatarUrl && (
             <AvatarImage src={message.avatarUrl} alt={message.authorName} />
           )}
-          <AvatarFallback className="bg-primary/15 text-primary text-[10px] md:text-xs font-bold">
+          <AvatarFallback className="bg-primary/15 text-primary text-[10px] font-bold">
             {message.authorName[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
-      )}
+      ) : !isOwn ? (
+        <div className="w-7 flex-shrink-0" />
+      ) : null}
 
+      {/* Message bubble */}
       <div
-        className={`max-w-[85%] md:max-w-[75%] px-3 md:px-4 py-2 md:py-2.5 rounded-2xl shadow-sm ${
+        className={`max-w-[80%] md:max-w-[70%] px-3.5 py-2.5 rounded-2xl ${
           isOwn
-            ? "bg-primary text-primary-foreground rounded-br-md"
-            : "bg-muted text-foreground rounded-bl-md"
+            ? "bg-msg-own text-msg-own-foreground rounded-br-sm"
+            : "bg-msg-other text-msg-other-foreground rounded-bl-sm"
         }`}
       >
         {!isOwn && showAvatar && (
@@ -47,7 +51,7 @@ export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps
           </div>
         )}
 
-        <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+        <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">
           {message.content}
         </p>
 
@@ -58,13 +62,13 @@ export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps
         >
           <span
             className={`text-[10px] ${
-              isOwn ? "text-primary-foreground/70" : "text-muted-foreground"
+              isOwn ? "text-msg-own-foreground/60" : "text-muted-foreground"
             }`}
           >
             {formatTime(message._creationTime)}
           </span>
           {isOwn && (
-            <span className="text-primary-foreground/80">
+            <span className="text-msg-own-foreground/70">
               {message.readCount > 0 ? (
                 <CheckCheck className="h-3.5 w-3.5" />
               ) : (

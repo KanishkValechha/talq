@@ -10,10 +10,13 @@ import { ProfileEditor } from "./components/ProfileEditor";
 import { Id } from "../convex/_generated/dataModel";
 import { MessageSquare, Zap, Shield, Users } from "lucide-react";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { useTheme } from "./hooks/use-theme";
 
 export default function App() {
+  const { resolvedTheme } = useTheme();
+
   return (
-    <div className="min-h-screen noise-bg">
+    <div className="min-h-screen">
       <Authenticated>
         <AuthenticatedApp />
       </Authenticated>
@@ -21,7 +24,7 @@ export default function App() {
         <UnauthenticatedApp />
       </Unauthenticated>
       <Toaster
-        theme="dark"
+        theme={resolvedTheme}
         toastOptions={{
           className: "bg-card border-border text-foreground",
         }}
@@ -71,27 +74,24 @@ function AuthenticatedApp() {
 }
 
 function UnauthenticatedApp() {
-  const features = [
-    { icon: Zap, label: "Real-time messaging" },
-    { icon: Users, label: "Channels & DMs" },
-    { icon: Shield, label: "Read receipts" },
-  ];
-
   return (
-    <div className="min-h-screen gradient-mesh relative z-10 flex items-center justify-center p-6">
+    <div className="min-h-screen relative z-10 flex items-center justify-center p-6">
       <div className="w-full max-w-md animate-fade-in">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl
-            bg-primary/10 border border-primary/20 mb-6 glow-primary">
-            <MessageSquare className="h-8 w-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
+            bg-primary/10 border border-primary/20 mb-6">
+            <MessageSquare className="h-7 w-7 text-primary" />
           </div>
-          <h1 className="text-4xl font-display font-bold text-foreground mb-3 tracking-tight">
+          <h1 className="text-3xl font-display font-bold text-foreground mb-2 tracking-tight">
             Welcome to Talq
           </h1>
+          <p className="text-sm text-muted-foreground">
+            Real-time messaging, beautifully simple.
+          </p>
         </div>
 
-        <div className="bg-card/60 backdrop-blur-xl border border-border
-          rounded-2xl p-8 shadow-2xl shadow-black/20">
+        <div className="bg-card/80 backdrop-blur-xl border border-border
+          rounded-2xl p-8 shadow-xl">
           <SignInForm />
         </div>
       </div>

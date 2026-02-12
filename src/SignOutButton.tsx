@@ -21,7 +21,7 @@ export function SignOutButton() {
       onClick={() => void signOut()}
     >
       <LogOut className="h-4 w-4" />
-      <span className="hidden sm:inline">Sign out</span>
+      <span className="hidden sm:inline text-xs">Sign out</span>
     </Button>
   );
 }
