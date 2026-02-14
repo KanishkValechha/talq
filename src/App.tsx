@@ -1,6 +1,6 @@
 import { Authenticated, Unauthenticated, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { SignInForm } from "./SignInForm";
+import { SignInForm } from "./components/auth";
 import { Toaster } from "sonner";
 import { useState, useEffect } from "react";
 import { AppSidebar } from "./components/Sidebar";
@@ -34,10 +34,13 @@ export default function App() {
 }
 
 function AuthenticatedApp() {
-  const [selectedChannel, setSelectedChannel] = useState<Id<"channels"> | null>(null);
+  const [selectedChannel, setSelectedChannel] = useState<Id<"channels"> | null>(
+    null,
+  );
   const [selectedDM, setSelectedDM] = useState<Id<"users"> | null>(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [highlightMessageId, setHighlightMessageId] = useState<Id<"messages"> | null>(null);
+  const [highlightMessageId, setHighlightMessageId] =
+    useState<Id<"messages"> | null>(null);
   const updatePresence = useMutation(api.users.updatePresence);
 
   useEffect(() => {
@@ -86,9 +89,7 @@ function AuthenticatedApp() {
           />
         </div>
       </SidebarInset>
-      {showProfile && (
-        <ProfileEditor onClose={() => setShowProfile(false)} />
-      )}
+      {showProfile && <ProfileEditor onClose={() => setShowProfile(false)} />}
     </SidebarProvider>
   );
 }
@@ -98,8 +99,10 @@ function UnauthenticatedApp() {
     <div className="min-h-screen relative z-10 flex items-center justify-center p-6">
       <div className="w-full max-w-md animate-fade-in">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
-            bg-primary/10 border border-primary/20 mb-6">
+          <div
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
+            bg-primary/10 border border-primary/20 mb-6"
+          >
             <MessageSquare className="h-7 w-7 text-primary" />
           </div>
           <h1 className="text-3xl font-display font-bold text-foreground mb-2 tracking-tight">
@@ -110,8 +113,10 @@ function UnauthenticatedApp() {
           </p>
         </div>
 
-        <div className="bg-card/80 backdrop-blur-xl border border-border
-          rounded-2xl p-8 shadow-xl">
+        <div
+          className="bg-card/80 backdrop-blur-xl border border-border
+          rounded-2xl p-8 shadow-xl"
+        >
           <SignInForm />
         </div>
       </div>
