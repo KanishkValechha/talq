@@ -2,7 +2,7 @@ import { Authenticated, Unauthenticated, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { SignInForm } from "./components/auth";
 import { Toaster } from "sonner";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { AppSidebar } from "./components/Sidebar";
 import { MessagePane } from "./components/MessagePane";
 import { Header } from "./components/Header";
@@ -11,6 +11,9 @@ import { Id } from "../convex/_generated/dataModel";
 import { MessageSquare, Zap, Shield, Users } from "lucide-react";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { useTheme } from "./hooks/use-theme";
+import { useNavigationStore } from "./zustand/navigation";
+import { useMessageStore } from "./zustand/message";
+import { useProfileStore } from "./zustand/profile";
 
 export default function App() {
   const { resolvedTheme } = useTheme();
@@ -34,13 +37,9 @@ export default function App() {
 }
 
 function AuthenticatedApp() {
-  const [selectedChannel, setSelectedChannel] = useState<Id<"channels"> | null>(
-    null,
-  );
-  const [selectedDM, setSelectedDM] = useState<Id<"users"> | null>(null);
-  const [showProfile, setShowProfile] = useState(false);
-  const [highlightMessageId, setHighlightMessageId] =
-    useState<Id<"messages"> | null>(null);
+  const { selectChannel, selectDM } = useNavigationStore();
+  const { setHighlightMessageId } = useMessageStore();
+  const { showProfile, openProfile, closeProfile } = useProfileStore();
   const updatePresence = useMutation(api.users.updatePresence);
 
   useEffect(() => {
@@ -58,38 +57,21 @@ function AuthenticatedApp() {
     dmUserId: Id<"users"> | null;
     messageId: Id<"messages">;
   }) => {
-    setSelectedChannel(channelId);
-    setSelectedDM(dmUserId);
+    selectChannel(channelId);
+    selectDM(dmUserId);
     setHighlightMessageId(messageId);
   };
 
   return (
     <SidebarProvider>
-      <AppSidebar
-        selectedChannel={selectedChannel}
-        selectedDM={selectedDM}
-        onSelectChannel={(id) => {
-          setSelectedChannel(id);
-          setSelectedDM(null);
-        }}
-        onSelectDM={(id) => {
-          setSelectedDM(id);
-          setSelectedChannel(null);
-        }}
-        onShowProfile={() => setShowProfile(true)}
-      />
+      <AppSidebar />
       <SidebarInset className="h-svh flex flex-col relative z-10">
         <Header onSearchResultClick={handleSearchResultClick} />
         <div className="flex-1 flex overflow-hidden">
-          <MessagePane
-            channelId={selectedChannel}
-            dmUserId={selectedDM}
-            highlightMessageId={highlightMessageId}
-            onHighlightSeen={() => setHighlightMessageId(null)}
-          />
+          <MessagePane />
         </div>
       </SidebarInset>
-      {showProfile && <ProfileEditor onClose={() => setShowProfile(false)} />}
+      {showProfile && <ProfileEditor onClose={closeProfile} />}
     </SidebarProvider>
   );
 }

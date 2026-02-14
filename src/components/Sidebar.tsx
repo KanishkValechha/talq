@@ -5,7 +5,13 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-  Hash, Plus, X, UserCircle, ChevronDown, ChevronRight, MessageSquare,
+  Hash,
+  Plus,
+  X,
+  UserCircle,
+  ChevronDown,
+  ChevronRight,
+  MessageSquare,
 } from "lucide-react";
 import {
   Sidebar as ShadcnSidebar,
@@ -23,22 +29,13 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useNavigationStore } from "../zustand/navigation";
+import { useProfileStore } from "../zustand/profile";
 
-interface AppSidebarProps {
-  selectedChannel: Id<"channels"> | null;
-  selectedDM: Id<"users"> | null;
-  onSelectChannel: (id: Id<"channels">) => void;
-  onSelectDM: (id: Id<"users">) => void;
-  onShowProfile: () => void;
-}
-
-export function AppSidebar({
-  selectedChannel,
-  selectedDM,
-  onSelectChannel,
-  onSelectDM,
-  onShowProfile,
-}: AppSidebarProps) {
+export function AppSidebar() {
+  const { selectedChannel, selectedDM, selectChannel, selectDM } =
+    useNavigationStore();
+  const { openProfile } = useProfileStore();
   const channels = useQuery(api.channels.list) || [];
   const users = useQuery(api.users.listOnlineUsers) || [];
   const [showNewChannel, setShowNewChannel] = useState(false);
@@ -55,7 +52,7 @@ export function AppSidebar({
       const channelId = await createChannel({ name: newChannelName });
       setNewChannelName("");
       setShowNewChannel(false);
-      onSelectChannel(channelId);
+      selectChannel(channelId);
       if (isMobile) setOpenMobile(false);
     } catch (error) {
       console.error("Failed to create channel:", error);
@@ -63,12 +60,12 @@ export function AppSidebar({
   };
 
   const handleSelectChannel = (id: Id<"channels">) => {
-    onSelectChannel(id);
+    selectChannel(id);
     if (isMobile) setOpenMobile(false);
   };
 
   const handleSelectDM = (id: Id<"users">) => {
-    onSelectDM(id);
+    selectDM(id);
     if (isMobile) setOpenMobile(false);
   };
 
@@ -103,7 +100,11 @@ export function AppSidebar({
             onClick={() => setShowNewChannel(!showNewChannel)}
             title={showNewChannel ? "Cancel" : "New Channel"}
           >
-            {showNewChannel ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+            {showNewChannel ? (
+              <X className="h-3.5 w-3.5" />
+            ) : (
+              <Plus className="h-3.5 w-3.5" />
+            )}
           </SidebarGroupAction>
 
           {showNewChannel && (
@@ -128,7 +129,9 @@ export function AppSidebar({
                       onClick={() => handleSelectChannel(ch._id)}
                       tooltip={ch.name}
                     >
-                      <Hash className={`h-3.5 w-3.5 shrink-0 ${selectedChannel === ch._id ? "text-primary" : ""}`} />
+                      <Hash
+                        className={`h-3.5 w-3.5 shrink-0 ${selectedChannel === ch._id ? "text-primary" : ""}`}
+                      />
                       <span className="truncate">{ch.name}</span>
                     </SidebarMenuButton>
                     {ch.unreadCount > 0 && (
@@ -192,7 +195,7 @@ export function AppSidebar({
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onShowProfile} tooltip="Edit Profile">
+            <SidebarMenuButton onClick={openProfile} tooltip="Edit Profile">
               <UserCircle className="h-4 w-4" />
               <span>Edit Profile</span>
             </SidebarMenuButton>
@@ -206,8 +209,12 @@ export function AppSidebar({
 function OnlineDot({ online }: { online: boolean }) {
   return (
     <span className="relative shrink-0">
-      <span className={`block w-2 h-2 rounded-full ${online ? "bg-emerald-400" : "bg-muted-foreground/40"}`} />
-      {online && <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400/40 animate-pulse-soft" />}
+      <span
+        className={`block w-2 h-2 rounded-full ${online ? "bg-emerald-400" : "bg-muted-foreground/40"}`}
+      />
+      {online && (
+        <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400/40 animate-pulse-soft" />
+      )}
     </span>
   );
 }
