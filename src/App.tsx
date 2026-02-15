@@ -71,7 +71,7 @@ function AuthenticatedApp() {
           <MessagePane />
         </div>
       </SidebarInset>
-      {showProfile && <ProfileEditor onClose={closeProfile} />}
+      {showProfile && <ProfileEditor />}
     </SidebarProvider>
   );
 }

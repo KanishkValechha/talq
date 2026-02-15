@@ -12,12 +12,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Loader2 } from "lucide-react";
+import { useProfileStore } from "../zustand/profile";
 
-interface ProfileEditorProps {
-  onClose: () => void;
-}
-
-export function ProfileEditor({ onClose }: ProfileEditorProps) {
+export function ProfileEditor() {
+  const { showProfile, closeProfile } = useProfileStore();
   const profile = useQuery(api.users.getCurrentUserProfile);
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -51,7 +49,8 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
           body: selectedImage,
         });
         const json = await result.json();
-        if (!result.ok) throw new Error(`Upload failed: ${JSON.stringify(json)}`);
+        if (!result.ok)
+          throw new Error(`Upload failed: ${JSON.stringify(json)}`);
         avatarId = json.storageId;
       }
 
@@ -61,7 +60,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
       });
 
       toast.success("Profile updated!");
-      onClose();
+      closeProfile();
     } catch (error) {
       console.error("Failed to update profile:", error);
       toast.error("Failed to update profile");
@@ -74,9 +73,11 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
   const initials = (profile?.displayName || "U")[0].toUpperCase();
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-card border-border max-w-sm p-0 gap-0
-        shadow-xl animate-fade-in">
+    <Dialog open={showProfile} onOpenChange={(open) => !open && closeProfile()}>
+      <DialogContent
+        className="bg-card border-border max-w-sm p-0 gap-0
+        shadow-xl animate-fade-in"
+      >
         <div className="h-20 rounded-t-lg bg-linear-to-br from-primary/20 via-primary/5 to-transparent relative">
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
             <div className="relative group">
@@ -100,7 +101,9 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
 
         <div className="px-6 pt-14 pb-6 space-y-6">
           <DialogHeader className="text-center">
-            <DialogTitle className="font-display text-lg">Edit Profile</DialogTitle>
+            <DialogTitle className="font-display text-lg">
+              Edit Profile
+            </DialogTitle>
           </DialogHeader>
 
           <input
@@ -140,7 +143,7 @@ export function ProfileEditor({ onClose }: ProfileEditorProps) {
             </Button>
             <Button
               variant="outline"
-              onClick={onClose}
+              onClick={closeProfile}
               className="flex-1 h-10 border-border hover:bg-accent
                 transition-all duration-200"
             >
