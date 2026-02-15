@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-
-interface MessageInputProps {
-  channelId: Id<"channels"> | null;
-  dmUserId: Id<"users"> | null;
-}
+import type { MessageInputProps } from "../types/components";
 
 export function MessageInput({ channelId, dmUserId }: MessageInputProps) {
   const [newMessage, setNewMessage] = useState("");

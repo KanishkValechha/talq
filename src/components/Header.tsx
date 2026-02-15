@@ -8,15 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "../hooks/use-theme";
-import { Id } from "../../convex/_generated/dataModel";
-
-interface HeaderProps {
-  onSearchResultClick?: (params: {
-    channelId: Id<"channels"> | null;
-    dmUserId: Id<"users"> | null;
-    messageId: Id<"messages">;
-  }) => void;
-}
+import type { HeaderProps, SearchResult } from "../types/components";
 
 export function Header({ onSearchResultClick }: HeaderProps) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,7 +18,7 @@ export function Header({ onSearchResultClick }: HeaderProps) {
   const { resolvedTheme, toggleTheme } = useTheme();
   const searchResults = useQuery(
     api.messages.search,
-    searchTerm.trim() ? { searchTerm } : "skip"
+    searchTerm.trim() ? { searchTerm } : "skip",
   );
 
   useEffect(() => {
@@ -56,15 +48,19 @@ export function Header({ onSearchResultClick }: HeaderProps) {
   }, []);
 
   return (
-    <header className="h-14 bg-card/80 backdrop-blur-md border-b border-border
-      flex items-center px-3 md:px-5 gap-2 relative z-20">
+    <header
+      className="h-14 bg-card/80 backdrop-blur-md border-b border-border
+      flex items-center px-3 md:px-5 gap-2 relative z-20"
+    >
       <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground" />
       <Separator orientation="vertical" className="h-5 hidden md:block" />
 
       <div ref={searchRef} className="flex-1 max-w-xl mx-auto relative">
         <div className="relative group">
-          <Search className="absolute left-3 md:left-3.5 top-1/2 -translate-y-1/2 h-4 w-4
-            text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <Search
+            className="absolute left-3 md:left-3.5 top-1/2 -translate-y-1/2 h-4 w-4
+            text-muted-foreground group-focus-within:text-primary transition-colors"
+          />
           <input
             ref={inputRef}
             type="text"
@@ -83,15 +79,20 @@ export function Header({ onSearchResultClick }: HeaderProps) {
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {searchTerm && (
               <button
-                onClick={() => { setSearchTerm(""); setShowResults(false); }}
+                onClick={() => {
+                  setSearchTerm("");
+                  setShowResults(false);
+                }}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
-            <kbd className="hidden md:inline-flex h-5 items-center gap-0.5 rounded
+            <kbd
+              className="hidden md:inline-flex h-5 items-center gap-0.5 rounded
               border border-border bg-accent/50 px-1.5 font-mono text-[10px]
-              text-muted-foreground">
+              text-muted-foreground"
+            >
               <span className="text-xs">&#8984;</span>K
             </kbd>
           </div>
@@ -133,17 +134,6 @@ export function Header({ onSearchResultClick }: HeaderProps) {
   );
 }
 
-interface SearchResult {
-  _id: Id<"messages">;
-  _creationTime: number;
-  content: string;
-  authorName: string;
-  avatarUrl: string | null;
-  channelName: string | null;
-  channelId?: Id<"channels">;
-  dmOtherUserId?: Id<"users"> | null;
-}
-
 function SearchResults({
   results,
   onSelect,
@@ -153,8 +143,10 @@ function SearchResults({
 }) {
   if (!results) {
     return (
-      <div className="absolute top-full mt-2 w-full bg-card border border-border
-        rounded-xl shadow-2xl p-6 text-center">
+      <div
+        className="absolute top-full mt-2 w-full bg-card border border-border
+        rounded-xl shadow-2xl p-6 text-center"
+      >
         <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
           <div className="w-1 h-1 rounded-full bg-primary animate-pulse-soft" />
           <div className="w-1 h-1 rounded-full bg-primary animate-pulse-soft stagger-2" />
@@ -166,16 +158,20 @@ function SearchResults({
 
   if (results.length === 0) {
     return (
-      <div className="absolute top-full mt-2 w-full bg-card border border-border
-        rounded-xl shadow-2xl p-6 text-center">
+      <div
+        className="absolute top-full mt-2 w-full bg-card border border-border
+        rounded-xl shadow-2xl p-6 text-center"
+      >
         <p className="text-sm text-muted-foreground">No messages found</p>
       </div>
     );
   }
 
   return (
-    <div className="absolute top-full mt-2 w-full bg-card border border-border
-      rounded-xl shadow-2xl max-h-80 overflow-y-auto">
+    <div
+      className="absolute top-full mt-2 w-full bg-card border border-border
+      rounded-xl shadow-2xl max-h-80 overflow-y-auto"
+    >
       {results.map((result, i) => (
         <button
           type="button"

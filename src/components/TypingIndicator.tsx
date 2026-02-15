@@ -1,6 +1,4 @@
-interface TypingIndicatorProps {
-  users: string[] | undefined;
-}
+import type { TypingIndicatorProps } from "../types/components";
 
 export function TypingIndicator({ users }: TypingIndicatorProps) {
   if (!users || users.length === 0) return null;

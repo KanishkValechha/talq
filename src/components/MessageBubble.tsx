@@ -1,22 +1,12 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Check, CheckCheck } from "lucide-react";
+import type { MessageBubbleProps } from "../types/components";
 
-interface MessageBubbleProps {
-  message: {
-    _id: string;
-    _creationTime: number;
-    authorId: string;
-    authorName: string;
-    avatarUrl: string | null;
-    content: string;
-    readCount: number;
-    isRead?: boolean;
-  };
-  isOwn: boolean;
-  showAvatar: boolean;
-}
-
-export function MessageBubble({ message, isOwn, showAvatar }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  isOwn,
+  showAvatar,
+}: MessageBubbleProps) {
   return (
     <div
       className={`flex items-end gap-2 px-3 md:px-4 py-0.5 md:py-1 ${
