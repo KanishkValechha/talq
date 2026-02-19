@@ -41,32 +41,23 @@ export function MessageBubble({
           </div>
         )}
 
-        <p className="text-[14px] leading-relaxed whitespace-pre-wrap wrap-break-word">
+        <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">
           {message.content}
-        </p>
-
-        <div
-          className={`flex items-center gap-1.5 mt-1 ${
-            isOwn ? "justify-end" : "justify-start"
-          }`}
-        >
           <span
-            className={`text-[10px] ${
-              isOwn ? "text-msg-own-foreground/60" : "text-muted-foreground"
-            }`}
+            className={`inline-flex items-center gap-0.5 ml-2 whitespace-nowrap float-right text-[10px] ${isOwn ? "text-msg-own-foreground/60" : "text-muted-foreground"}`}
           >
             {formatTime(message._creationTime)}
+            {isOwn && (
+              <span className="text-msg-own-foreground/70">
+                {message.readCount > 0 ? (
+                  <CheckCheck className="h-3 w-3" />
+                ) : (
+                  <Check className="h-3 w-3" />
+                )}
+              </span>
+            )}
           </span>
-          {isOwn && (
-            <span className="text-msg-own-foreground/70">
-              {message.readCount > 0 ? (
-                <CheckCheck className="h-3.5 w-3.5" />
-              ) : (
-                <Check className="h-3.5 w-3.5" />
-              )}
-            </span>
-          )}
-        </div>
+        </p>
       </div>
     </div>
   );
