@@ -29,7 +29,7 @@ export function MessageBubble({
 
       {/* Message bubble */}
       <div
-        className={`max-w-[80%] md:max-w-[70%] px-3.5 py-2.5 rounded-2xl ${
+        className={`max-w-[85%] md:max-w-[80%] px-3.5 py-2.5 rounded-2xl ${
           isOwn
             ? "bg-msg-own text-msg-own-foreground rounded-br-sm"
             : "bg-msg-other text-msg-other-foreground rounded-bl-sm"
