@@ -6,19 +6,19 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Camera, Loader2, PencilLine } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import { useProfileStore } from "../zustand/profile";
+import { useTheme } from "../hooks/use-theme";
 
 export function ProfileEditor() {
   const { showProfile, closeProfile } = useProfileStore();
+  const { resolvedTheme } = useTheme();
   const profile = useQuery(api.users.getCurrentUserProfile);
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [isEditingName, setIsEditingName] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (showProfile) {
@@ -27,12 +27,6 @@ export function ProfileEditor() {
       setPreviewUrl(null);
     }
   }, [showProfile, profile?.displayName]);
-
-  useEffect(() => {
-    if (isEditingName && nameInputRef.current) {
-      nameInputRef.current.focus();
-    }
-  }, [isEditingName]);
 
   const updateProfile = useMutation(api.users.updateProfile);
   const generateUploadUrl = useMutation(api.users.generateUploadUrl);
@@ -89,44 +83,9 @@ export function ProfileEditor() {
   return (
     <Dialog open={showProfile} onOpenChange={(open) => !open && closeProfile()}>
       <DialogContent
-        className="bg-card border-border w-[95vw] max-w-[380px] p-0 
-        shadow-2xl animate-fade-in rounded-2xl overflow-hidden"
+        className="bg-card border-border w-[90vw] max-w-[360px] p-0 
+        shadow-xl animate-fade-in rounded-2xl overflow-hidden"
       >
-        <div className="relative">
-          <div className="h-20 bg-linear-to-r from-indigo-500/20 via-primary/10 to-violet-500/20" />
-          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
-            <div className="relative">
-              <div className="h-24 w-24 rounded-2xl bg-card shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-4 border-card overflow-hidden">
-                <Avatar className="h-full w-full">
-                  {avatarSrc && (
-                    <AvatarImage
-                      src={avatarSrc}
-                      alt="Profile"
-                      className="object-cover"
-                    />
-                  )}
-                  <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-3xl font-bold">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <button
-                onClick={() => imageInputRef.current?.click()}
-                className="absolute inset-0 rounded-xl bg-black/40 opacity-0 hover:opacity-100 
-                  transition-all duration-200 flex items-center justify-center cursor-pointer
-                  group-hover:opacity-100"
-              >
-                <div className="flex flex-col items-center gap-1">
-                  <Camera className="h-5 w-5 text-white" />
-                  <span className="text-[10px] text-white font-medium">
-                    Change
-                  </span>
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <input
           type="file"
           ref={imageInputRef}
@@ -135,11 +94,35 @@ export function ProfileEditor() {
           className="hidden"
         />
 
-        <div className="px-6 pt-14 pb-6">
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-display font-bold text-foreground">
-              {displayName || profile?.displayName || "User"}
-            </h2>
+        <div className="px-6 pt-8 pb-6">
+          <div className="flex flex-col items-center mb-6">
+            <button
+              onClick={() => imageInputRef.current?.click()}
+              className="relative group cursor-pointer"
+            >
+              <Avatar className="h-20 w-20 ring-4 ring-border">
+                {avatarSrc && (
+                  <AvatarImage
+                    src={avatarSrc}
+                    alt="Profile"
+                    className="object-cover"
+                  />
+                )}
+                <AvatarFallback className="bg-secondary text-secondary-foreground text-2xl font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div
+                className="absolute inset-0 rounded-full bg-black/50 opacity-0 
+                group-hover:opacity-100 transition-opacity duration-200 
+                flex items-center justify-center"
+              >
+                <Camera className="h-6 w-6 text-white" />
+              </div>
+            </button>
+            <p className="text-xs text-muted-foreground mt-2">
+              Click avatar to change
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -147,36 +130,19 @@ export function ProfileEditor() {
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Display Name
               </label>
-              <div className="relative">
-                <Input
-                  ref={nameInputRef}
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  onFocus={() => setIsEditingName(true)}
-                  onBlur={() => setIsEditingName(false)}
-                  placeholder={profile?.displayName || "Enter your name"}
-                  className="h-11 bg-secondary/60 border-border text-foreground pr-10
-                    placeholder:text-muted-foreground focus-visible:ring-2 
-                    focus-visible:ring-primary/30 focus-visible:border-primary
-                    transition-all duration-200 rounded-lg"
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  {isEditingName ? (
-                    <PencilLine className="h-4 w-4 text-primary animate-pulse" />
-                  ) : (
-                    <button
-                      onClick={() => setIsEditingName(true)}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <PencilLine className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder={profile?.displayName || "Enter your name"}
+                className="h-11 bg-secondary border-border text-foreground
+                  placeholder:text-muted-foreground focus-visible:ring-2 
+                  focus-visible:ring-primary/30 focus-visible:border-primary
+                  transition-all duration-200 rounded-lg"
+              />
             </div>
 
             {previewUrl && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/40 border border-border/50">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
                 <div className="h-10 w-10 rounded-md overflow-hidden bg-card">
                   <img
                     src={previewUrl}
@@ -221,15 +187,11 @@ export function ProfileEditor() {
             <Button
               onClick={handleSave}
               disabled={saving || !hasChanges}
-              className="flex-1 h-11 font-display font-semibold text-sm
+              className="flex-1 h-11 font-semibold text-sm
                 transition-all duration-300 rounded-lg disabled:opacity-50
-                disabled:cursor-not-allowed bg-primary hover:bg-primary/90"
+                disabled:cursor-not-allowed"
             >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Save Changes"
-              )}
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
             </Button>
             <Button
               variant="outline"
