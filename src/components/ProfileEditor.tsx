@@ -1,17 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Camera, Loader2 } from "lucide-react";
+import { Camera, Loader2, PencilLine } from "lucide-react";
 import { useProfileStore } from "../zustand/profile";
 
 export function ProfileEditor() {
@@ -21,7 +16,23 @@ export function ProfileEditor() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showProfile) {
+      setDisplayName(profile?.displayName || "");
+      setSelectedImage(null);
+      setPreviewUrl(null);
+    }
+  }, [showProfile, profile?.displayName]);
+
+  useEffect(() => {
+    if (isEditingName && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [isEditingName]);
 
   const updateProfile = useMutation(api.users.updateProfile);
   const generateUploadUrl = useMutation(api.users.generateUploadUrl);
@@ -72,68 +83,147 @@ export function ProfileEditor() {
   const avatarSrc = previewUrl || profile?.avatarUrl || "";
   const initials = (profile?.displayName || "U")[0].toUpperCase();
 
+  const hasChanges =
+    displayName !== (profile?.displayName || "") || selectedImage !== null;
+
   return (
     <Dialog open={showProfile} onOpenChange={(open) => !open && closeProfile()}>
       <DialogContent
-        className="bg-card border-border w-[90vw] max-w-sm sm:max-w-md p-0 gap-0
-        shadow-xl animate-fade-in"
+        className="bg-card border-border w-[95vw] max-w-[380px] p-0 
+        shadow-2xl animate-fade-in rounded-2xl overflow-hidden"
       >
-        <div className="h-24 sm:h-28 rounded-t-lg bg-linear-to-br from-primary/20 via-primary/5 to-transparent relative">
-          <div className="absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2">
-            <div className="relative group">
-              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 ring-4 ring-card">
-                {avatarSrc && <AvatarImage src={avatarSrc} alt="Profile" />}
-                <AvatarFallback className="bg-primary/15 text-primary text-2xl font-bold">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+        <div className="relative">
+          <div className="h-20 bg-linear-to-r from-indigo-500/20 via-primary/10 to-violet-500/20" />
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+            <div className="relative">
+              <div className="h-24 w-24 rounded-2xl bg-card shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-4 border-card overflow-hidden">
+                <Avatar className="h-full w-full">
+                  {avatarSrc && (
+                    <AvatarImage
+                      src={avatarSrc}
+                      alt="Profile"
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-3xl font-bold">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
               <button
                 onClick={() => imageInputRef.current?.click()}
-                className="absolute inset-0 rounded-full bg-black/50 opacity-0
-                  group-hover:opacity-100 transition-opacity duration-200
-                  flex items-center justify-center cursor-pointer"
+                className="absolute inset-0 rounded-xl bg-black/40 opacity-0 hover:opacity-100 
+                  transition-all duration-200 flex items-center justify-center cursor-pointer
+                  group-hover:opacity-100"
               >
-                <Camera className="h-6 w-6 text-white" />
+                <div className="flex flex-col items-center gap-1">
+                  <Camera className="h-5 w-5 text-white" />
+                  <span className="text-[10px] text-white font-medium">
+                    Change
+                  </span>
+                </div>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="px-5 sm:px-8 pt-14 sm:pt-16 pb-6 space-y-5 sm:space-y-6">
-          <DialogHeader className="text-center">
-            <DialogTitle className="font-display text-xl sm:text-2xl font-bold">
-              Edit Profile
-            </DialogTitle>
-          </DialogHeader>
+        <input
+          type="file"
+          ref={imageInputRef}
+          onChange={handleImageSelect}
+          accept="image/*"
+          className="hidden"
+        />
 
-          <input
-            type="file"
-            ref={imageInputRef}
-            onChange={handleImageSelect}
-            accept="image/*"
-            className="hidden"
-          />
-
-          <div className="space-y-2">
-            <label className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">
-              Display Name
-            </label>
-            <Input
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              placeholder={profile?.displayName || "Enter your name"}
-              className="h-12 sm:h-11 bg-secondary border-border text-foreground text-base sm:text-sm
-                placeholder:text-muted-foreground focus-visible:ring-primary/50
-                focus-visible:border-primary rounded-lg sm:rounded-md"
-            />
+        <div className="px-6 pt-14 pb-6">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-display font-bold text-foreground">
+              {displayName || profile?.displayName || "User"}
+            </h2>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Display Name
+              </label>
+              <div className="relative">
+                <Input
+                  ref={nameInputRef}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  onFocus={() => setIsEditingName(true)}
+                  onBlur={() => setIsEditingName(false)}
+                  placeholder={profile?.displayName || "Enter your name"}
+                  className="h-11 bg-secondary/60 border-border text-foreground pr-10
+                    placeholder:text-muted-foreground focus-visible:ring-2 
+                    focus-visible:ring-primary/30 focus-visible:border-primary
+                    transition-all duration-200 rounded-lg"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {isEditingName ? (
+                    <PencilLine className="h-4 w-4 text-primary animate-pulse" />
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingName(true)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <PencilLine className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {previewUrl && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/40 border border-border/50">
+                <div className="h-10 w-10 rounded-md overflow-hidden bg-card">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {selectedImage?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Ready to upload
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedImage(null);
+                    setPreviewUrl(null);
+                  }}
+                  className="text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-3 mt-6">
             <Button
               onClick={handleSave}
-              disabled={saving}
-              className="order-1 sm:order-none flex-1 h-11 sm:h-10 font-display font-semibold text-sm
-                transition-all duration-300 rounded-lg sm:rounded-md"
+              disabled={saving || !hasChanges}
+              className="flex-1 h-11 font-display font-semibold text-sm
+                transition-all duration-300 rounded-lg disabled:opacity-50
+                disabled:cursor-not-allowed bg-primary hover:bg-primary/90"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -144,8 +234,8 @@ export function ProfileEditor() {
             <Button
               variant="outline"
               onClick={closeProfile}
-              className="order-2 sm:order-none flex-1 h-11 sm:h-10 border-border hover:bg-accent
-                transition-all duration-200 rounded-lg sm:rounded-md"
+              className="flex-1 h-11 border-border hover:bg-accent
+                transition-all duration-200 rounded-lg font-medium"
             >
               Cancel
             </Button>
