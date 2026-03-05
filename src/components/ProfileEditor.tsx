@@ -8,11 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Loader2 } from "lucide-react";
 import { useProfileStore } from "../zustand/profile";
-import { useTheme } from "../hooks/use-theme";
 
 export function ProfileEditor() {
   const { showProfile, closeProfile } = useProfileStore();
-  const { resolvedTheme } = useTheme();
   const profile = useQuery(api.users.getCurrentUserProfile);
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
