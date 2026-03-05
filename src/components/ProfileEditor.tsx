@@ -75,13 +75,13 @@ export function ProfileEditor() {
   return (
     <Dialog open={showProfile} onOpenChange={(open) => !open && closeProfile()}>
       <DialogContent
-        className="bg-card border-border max-w-sm p-0 gap-0
+        className="bg-card border-border w-[90vw] max-w-sm sm:max-w-md p-0 gap-0
         shadow-xl animate-fade-in"
       >
-        <div className="h-20 rounded-t-lg bg-linear-to-br from-primary/20 via-primary/5 to-transparent relative">
-          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+        <div className="h-24 sm:h-28 rounded-t-lg bg-linear-to-br from-primary/20 via-primary/5 to-transparent relative">
+          <div className="absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2">
             <div className="relative group">
-              <Avatar className="h-20 w-20 ring-4 ring-card">
+              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 ring-4 ring-card">
                 {avatarSrc && <AvatarImage src={avatarSrc} alt="Profile" />}
                 <AvatarFallback className="bg-primary/15 text-primary text-2xl font-bold">
                   {initials}
@@ -93,15 +93,15 @@ export function ProfileEditor() {
                   group-hover:opacity-100 transition-opacity duration-200
                   flex items-center justify-center cursor-pointer"
               >
-                <Camera className="h-5 w-5 text-white" />
+                <Camera className="h-6 w-6 text-white" />
               </button>
             </div>
           </div>
         </div>
 
-        <div className="px-6 pt-14 pb-6 space-y-6">
+        <div className="px-5 sm:px-8 pt-14 sm:pt-16 pb-6 space-y-5 sm:space-y-6">
           <DialogHeader className="text-center">
-            <DialogTitle className="font-display text-lg">
+            <DialogTitle className="font-display text-xl sm:text-2xl font-bold">
               Edit Profile
             </DialogTitle>
           </DialogHeader>
@@ -115,25 +115,25 @@ export function ProfileEditor() {
           />
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <label className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">
               Display Name
             </label>
             <Input
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder={profile?.displayName || "Enter your name"}
-              className="h-11 bg-secondary border-border text-foreground
+              className="h-12 sm:h-11 bg-secondary border-border text-foreground text-base sm:text-sm
                 placeholder:text-muted-foreground focus-visible:ring-primary/50
-                focus-visible:border-primary"
+                focus-visible:border-primary rounded-lg sm:rounded-md"
             />
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 h-10 font-display font-semibold text-sm
-                transition-all duration-300"
+              className="order-1 sm:order-none flex-1 h-11 sm:h-10 font-display font-semibold text-sm
+                transition-all duration-300 rounded-lg sm:rounded-md"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -144,8 +144,8 @@ export function ProfileEditor() {
             <Button
               variant="outline"
               onClick={closeProfile}
-              className="flex-1 h-10 border-border hover:bg-accent
-                transition-all duration-200"
+              className="order-2 sm:order-none flex-1 h-11 sm:h-10 border-border hover:bg-accent
+                transition-all duration-200 rounded-lg sm:rounded-md"
             >
               Cancel
             </Button>
