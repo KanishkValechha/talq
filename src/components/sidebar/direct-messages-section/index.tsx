@@ -17,8 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavigationStore } from "../../../zustand/navigation";
-import { OnlineDot } from "../online-dot";
+import { useNavigationStore } from "@/zustand/navigation";
 
 export function DirectMessagesSection() {
   const users = useQuery(api.users.listOnlineUsers) || [];
@@ -57,7 +56,14 @@ export function DirectMessagesSection() {
                   onClick={() => handleSelectDM(user.userId)}
                   tooltip={user.displayName}
                 >
-                  <OnlineDot online={user.isOnline} />
+                  <span className="relative shrink-0">
+                    <span
+                      className={`block w-2 h-2 rounded-full ${user.isOnline ? "bg-emerald-400" : "bg-muted-foreground/40"}`}
+                    />
+                    {user.isOnline && (
+                      <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400/40 animate-pulse-soft" />
+                    )}
+                  </span>
                   <span className="truncate">{user.displayName}</span>
                 </SidebarMenuButton>
                 {user.unreadCount > 0 && (

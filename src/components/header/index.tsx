@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { SignOutButton } from "../../sign-out-button";
+import { SignOutButton } from "../auth/sign-out-button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search, X, Sun, Moon } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -10,18 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "../../hooks/use-theme";
 import { useNavigationStore } from "../../zustand/navigation";
 import { useMessageStore } from "../../zustand/message";
-import type { Id } from "../../../../convex/_generated/dataModel";
-
-interface SearchResult {
-  _id: Id<"messages">;
-  _creationTime: number;
-  content: string;
-  authorName: string;
-  avatarUrl: string | null;
-  channelName: string | null;
-  channelId?: Id<"channels">;
-  dmOtherUserId?: Id<"users"> | null;
-}
+import type { SearchResult } from "@/types";
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");

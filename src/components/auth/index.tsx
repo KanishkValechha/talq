@@ -11,25 +11,27 @@ export function SignInForm() {
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [submitting, setSubmitting] = useState(false);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.set("flow", flow);
+    void signIn("password", formData).catch((error) => {
+      const toastTitle = error.message.includes("Invalid password")
+        ? "Invalid password. Please try again."
+        : flow === "signIn"
+          ? "Could not sign in, did you mean to sign up?"
+          : "Could not sign up, did you mean to sign in?";
+      toast.error(toastTitle);
+      setSubmitting(false);
+    });
+  }
+
   return (
     <div className="w-full space-y-6">
       <form
         className="space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitting(true);
-          const formData = new FormData(e.target as HTMLFormElement);
-          formData.set("flow", flow);
-          void signIn("password", formData).catch((error) => {
-            const toastTitle = error.message.includes("Invalid password")
-              ? "Invalid password. Please try again."
-              : flow === "signIn"
-                ? "Could not sign in, did you mean to sign up?"
-                : "Could not sign up, did you mean to sign in?";
-            toast.error(toastTitle);
-            setSubmitting(false);
-          });
-        }}
+        onSubmit={handleSubmit}
       >
         <div className="space-y-3">
           <Input

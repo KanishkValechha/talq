@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { useProfileStore } from "../../zustand/profile";
+import { useProfileStore } from "@/zustand/profile";
 import { ChannelsSection } from "./channels-section";
 import { DirectMessagesSection } from "./direct-messages-section";
 

@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { useProfileStore } from "../../zustand/profile";
+import { useProfileStore } from "@/zustand/profile";
 import { AvatarPicker } from "./avatar-picker";
 import { ImagePreview } from "./image-preview";
 

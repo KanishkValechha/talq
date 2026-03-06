@@ -1,20 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Check, CheckCheck } from "lucide-react";
-
-interface MessageBubbleProps {
-  message: {
-    _id: string;
-    _creationTime: number;
-    authorId: string;
-    authorName: string;
-    avatarUrl: string | null;
-    content: string;
-    readCount: number;
-    isRead?: boolean;
-  };
-  isOwn: boolean;
-  showAvatar: boolean;
-}
+import type { MessageBubbleProps } from "@/types";
 
 export function MessageBubble({
   message,
@@ -55,7 +41,7 @@ export function MessageBubble({
           </div>
         )}
 
-        <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">
+        <p className="text-[14px] leading-relaxed whitespace-pre-wrap wrap-break-words">
           {message.content}
           <span
             className={`inline-flex items-center gap-0.5 ml-2 whitespace-nowrap float-right text-[10px] ${isOwn ? "text-msg-own-foreground/60" : "text-muted-foreground"}`}

@@ -1,17 +1,15 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera } from "lucide-react";
-
-interface AvatarPickerProps {
-  avatarSrc: string;
-  initials: string;
-  onSelect: () => void;
-}
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Camera } from "lucide-react"
 
 export function AvatarPicker({
   avatarSrc,
   initials,
   onSelect,
-}: AvatarPickerProps) {
+}: {
+  avatarSrc: string
+  initials: string
+  onSelect: () => void
+}) {
   return (
     <div className="flex flex-col items-center mb-6">
       <button onClick={onSelect} className="relative group cursor-pointer">
@@ -33,5 +31,5 @@ export function AvatarPicker({
       </button>
       <p className="text-xs text-muted-foreground mt-2">Click avatar to change</p>
     </div>
-  );
+  )
 }

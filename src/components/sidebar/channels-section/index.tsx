@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavigationStore } from "../../../zustand/navigation";
+import { useNavigationStore } from "@/zustand/navigation";
 
 export function ChannelsSection() {
   const channels = useQuery(api.channels.list) || [];

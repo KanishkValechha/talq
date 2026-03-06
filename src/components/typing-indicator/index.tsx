@@ -1,8 +1,4 @@
-interface TypingIndicatorProps {
-  users?: string[];
-}
-
-export function TypingIndicator({ users }: TypingIndicatorProps) {
+export function TypingIndicator({ users }: { users: string[] }) {
   if (!users || users.length === 0) return null;
 
   const text =
