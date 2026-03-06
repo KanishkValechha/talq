@@ -3,11 +3,12 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Camera, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useProfileStore } from "../../zustand/profile";
+import { AvatarPicker } from "./avatar-picker";
+import { ImagePreview } from "./image-preview";
 
 export function ProfileEditor() {
   const { showProfile, closeProfile } = useProfileStore();
@@ -93,35 +94,11 @@ export function ProfileEditor() {
         />
 
         <div className="px-6 pt-8 pb-6">
-          <div className="flex flex-col items-center mb-6">
-            <button
-              onClick={() => imageInputRef.current?.click()}
-              className="relative group cursor-pointer"
-            >
-              <Avatar className="h-20 w-20 ring-4 ring-border">
-                {avatarSrc && (
-                  <AvatarImage
-                    src={avatarSrc}
-                    alt="Profile"
-                    className="object-cover"
-                  />
-                )}
-                <AvatarFallback className="bg-secondary text-secondary-foreground text-2xl font-bold">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-              <div
-                className="absolute inset-0 rounded-full bg-black/50 opacity-0 
-                group-hover:opacity-100 transition-opacity duration-200 
-                flex items-center justify-center"
-              >
-                <Camera className="h-6 w-6 text-white" />
-              </div>
-            </button>
-            <p className="text-xs text-muted-foreground mt-2">
-              Click avatar to change
-            </p>
-          </div>
+          <AvatarPicker
+            avatarSrc={avatarSrc}
+            initials={initials}
+            onSelect={() => imageInputRef.current?.click()}
+          />
 
           <div className="space-y-4">
             <div className="space-y-2">
@@ -140,44 +117,14 @@ export function ProfileEditor() {
             </div>
 
             {previewUrl && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
-                <div className="h-10 w-10 rounded-md overflow-hidden bg-card">
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {selectedImage?.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Ready to upload
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedImage(null);
-                    setPreviewUrl(null);
-                  }}
-                  className="text-muted-foreground hover:text-destructive transition-colors"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
+              <ImagePreview
+                fileName={selectedImage?.name}
+                previewUrl={previewUrl}
+                onClear={() => {
+                  setSelectedImage(null);
+                  setPreviewUrl(null);
+                }}
+              />
             )}
           </div>
 
