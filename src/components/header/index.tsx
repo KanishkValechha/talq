@@ -10,7 +10,18 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "../../hooks/use-theme";
 import { useNavigationStore } from "../../zustand/navigation";
 import { useMessageStore } from "../../zustand/message";
-import type { SearchResult } from "../../types/components";
+import type { Id } from "../../../../convex/_generated/dataModel";
+
+interface SearchResult {
+  _id: Id<"messages">;
+  _creationTime: number;
+  content: string;
+  authorName: string;
+  avatarUrl: string | null;
+  channelName: string | null;
+  channelId?: Id<"channels">;
+  dmOtherUserId?: Id<"users"> | null;
+}
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
