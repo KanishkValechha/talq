@@ -1,19 +1,19 @@
 import { Authenticated, Unauthenticated, useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { SignInForm } from "./components/auth";
+import { api } from "../../convex/_generated/api";
+import { SignInForm } from "../components/auth";
 import { Toaster } from "sonner";
 import { useEffect } from "react";
-import { AppSidebar } from "./components/Sidebar";
-import { MessagePane } from "./components/MessagePane";
-import { Header } from "./components/Header";
-import { ProfileEditor } from "./components/ProfileEditor";
-import { Id } from "../convex/_generated/dataModel";
-import { MessageSquare, Zap, Shield, Users } from "lucide-react";
+import { AppSidebar } from "../components/sidebar";
+import { MessagePane } from "../components/message-pane";
+import { Header } from "../components/header";
+import { ProfileEditor } from "../components/profile-editor";
+import { Id } from "../../convex/_generated/dataModel";
+import { MessageSquare } from "lucide-react";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { useTheme } from "./hooks/use-theme";
-import { useNavigationStore } from "./zustand/navigation";
-import { useMessageStore } from "./zustand/message";
-import { useProfileStore } from "./zustand/profile";
+import { useTheme } from "../hooks/use-theme";
+import { useNavigationStore } from "../zustand/navigation";
+import { useMessageStore } from "../zustand/message";
+import { useProfileStore } from "../zustand/profile";
 
 export default function App() {
   const { resolvedTheme } = useTheme();
@@ -39,7 +39,7 @@ export default function App() {
 function AuthenticatedApp() {
   const { selectChannel, selectDM } = useNavigationStore();
   const { setHighlightMessageId } = useMessageStore();
-  const { showProfile, openProfile, closeProfile } = useProfileStore();
+  const { showProfile } = useProfileStore();
   const updatePresence = useMutation(api.users.updatePresence);
 
   useEffect(() => {

@@ -1,13 +1,13 @@
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { useEffect, useRef, useCallback } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageBubble } from "./MessageBubble";
-import { MessageInput } from "./MessageInput";
-import { TypingIndicator } from "./TypingIndicator";
+import { MessageBubble } from "../message-bubble";
+import { MessageInput } from "../message-input";
+import { TypingIndicator } from "../typing-indicator";
 import { MessageSquare, Hash, AtSign } from "lucide-react";
-import { useNavigationStore } from "../zustand/navigation";
-import { useMessageStore } from "../zustand/message";
+import { useNavigationStore } from "../../zustand/navigation";
+import { useMessageStore } from "../../zustand/message";
 
 export function MessagePane() {
   const { selectedChannel, selectedDM } = useNavigationStore();

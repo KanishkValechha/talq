@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Loader2 } from "lucide-react";
-import { useProfileStore } from "../zustand/profile";
+import { useProfileStore } from "../../zustand/profile";
 
 export function ProfileEditor() {
   const { showProfile, closeProfile } = useProfileStore();

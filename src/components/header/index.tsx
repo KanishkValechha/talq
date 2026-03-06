@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { SignOutButton } from "../SignOutButton";
+import { api } from "../../../convex/_generated/api";
+import { SignOutButton } from "../../sign-out-button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search, X, Sun, Moon } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "../hooks/use-theme";
-import type { HeaderProps, SearchResult } from "../types/components";
+import { useTheme } from "../../hooks/use-theme";
+import type { HeaderProps, SearchResult } from "../../types/components";
 
 export function Header({ onSearchResultClick }: HeaderProps) {
   const [searchTerm, setSearchTerm] = useState("");

@@ -3,7 +3,7 @@ import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
 import { ThemeProvider } from "./hooks/use-theme";
 import "./index.css";
-import App from "./App";
+import App from "./app";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 

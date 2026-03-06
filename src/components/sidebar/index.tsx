@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -29,8 +29,8 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavigationStore } from "../zustand/navigation";
-import { useProfileStore } from "../zustand/profile";
+import { useNavigationStore } from "../../zustand/navigation";
+import { useProfileStore } from "../../zustand/profile";
 
 export function AppSidebar() {
   const { selectedChannel, selectedDM, selectChannel, selectDM } =

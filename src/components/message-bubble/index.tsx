@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Check, CheckCheck } from "lucide-react";
-import type { MessageBubbleProps } from "../types/components";
+import type { MessageBubbleProps } from "../../types/components";
 
 export function MessageBubble({
   message,
