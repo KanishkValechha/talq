@@ -109,8 +109,7 @@ export function MessagePane() {
           <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
-
-      <MessageInput channelId={selectedChannel} dmUserId={selectedDM} />
+      <MessageInput />
     </div>
   );
 }

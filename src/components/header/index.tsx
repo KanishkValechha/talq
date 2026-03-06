@@ -8,14 +8,18 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "../../hooks/use-theme";
-import type { HeaderProps, SearchResult } from "../../types/components";
+import { useNavigationStore } from "../../zustand/navigation";
+import { useMessageStore } from "../../zustand/message";
+import type { SearchResult } from "../../types/components";
 
-export function Header({ onSearchResultClick }: HeaderProps) {
+export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { resolvedTheme, toggleTheme } = useTheme();
+  const { selectChannel, selectDM } = useNavigationStore();
+  const { setHighlightMessageId } = useMessageStore();
   const searchResults = useQuery(
     api.messages.search,
     searchTerm.trim() ? { searchTerm } : "skip",
@@ -104,11 +108,9 @@ export function Header({ onSearchResultClick }: HeaderProps) {
             onSelect={(result) => {
               setSearchTerm("");
               setShowResults(false);
-              onSearchResultClick?.({
-                channelId: result.channelId ?? null,
-                dmUserId: result.dmOtherUserId ?? null,
-                messageId: result._id,
-              });
+              selectChannel(result.channelId ?? null);
+              selectDM(result.dmOtherUserId ?? null);
+              setHighlightMessageId(result._id);
             }}
           />
         )}

@@ -7,12 +7,9 @@ import { AppSidebar } from "../components/sidebar";
 import { MessagePane } from "../components/message-pane";
 import { Header } from "../components/header";
 import { ProfileEditor } from "../components/profile-editor";
-import { Id } from "../../convex/_generated/dataModel";
 import { MessageSquare } from "lucide-react";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { useTheme } from "../hooks/use-theme";
-import { useNavigationStore } from "../zustand/navigation";
-import { useMessageStore } from "../zustand/message";
 import { useProfileStore } from "../zustand/profile";
 
 export default function App() {
@@ -37,8 +34,6 @@ export default function App() {
 }
 
 function AuthenticatedApp() {
-  const { selectChannel, selectDM } = useNavigationStore();
-  const { setHighlightMessageId } = useMessageStore();
   const { showProfile } = useProfileStore();
   const updatePresence = useMutation(api.users.updatePresence);
 
@@ -48,25 +43,11 @@ function AuthenticatedApp() {
     return () => clearInterval(interval);
   }, [updatePresence]);
 
-  const handleSearchResultClick = ({
-    channelId,
-    dmUserId,
-    messageId,
-  }: {
-    channelId: Id<"channels"> | null;
-    dmUserId: Id<"users"> | null;
-    messageId: Id<"messages">;
-  }) => {
-    selectChannel(channelId);
-    selectDM(dmUserId);
-    setHighlightMessageId(messageId);
-  };
-
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="h-svh flex flex-col relative z-10">
-        <Header onSearchResultClick={handleSearchResultClick} />
+        <Header />
         <div className="flex-1 flex overflow-hidden">
           <MessagePane />
         </div>

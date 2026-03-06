@@ -3,24 +3,25 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-import type { MessageInputProps } from "../../types/components";
+import { useNavigationStore } from "../../zustand/navigation";
 
-export function MessageInput({ channelId, dmUserId }: MessageInputProps) {
+export function MessageInput() {
   const [newMessage, setNewMessage] = useState("");
   const sendMessage = useMutation(api.messages.send);
   const setTyping = useMutation(api.typing.setTyping);
   const currentUser = useQuery(api.auth.loggedInUser);
+  const { selectedChannel, selectedDM } = useNavigationStore();
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
     try {
-      if (channelId) {
-        await sendMessage({ channelId, content: newMessage });
-      } else if (dmUserId && currentUser) {
+      if (selectedChannel) {
+        await sendMessage({ channelId: selectedChannel, content: newMessage });
+      } else if (selectedDM && currentUser) {
         await sendMessage({
-          dmParticipants: [currentUser._id, dmUserId],
+          dmParticipants: [currentUser._id, selectedDM],
           content: newMessage,
         });
       }
@@ -31,10 +32,10 @@ export function MessageInput({ channelId, dmUserId }: MessageInputProps) {
   };
 
   const handleTyping = () => {
-    if (channelId) {
-      setTyping({ channelId });
-    } else if (dmUserId && currentUser) {
-      setTyping({ dmParticipants: [currentUser._id, dmUserId] });
+    if (selectedChannel) {
+      setTyping({ channelId: selectedChannel });
+    } else if (selectedDM && currentUser) {
+      setTyping({ dmParticipants: [currentUser._id, selectedDM] });
     }
   };
 

@@ -1,13 +1,5 @@
 import { Id } from "../../convex/_generated/dataModel";
 
-export interface HeaderProps {
-  onSearchResultClick?: (params: {
-    channelId: Id<"channels"> | null;
-    dmUserId: Id<"users"> | null;
-    messageId: Id<"messages">;
-  }) => void;
-}
-
 export interface SearchResult {
   _id: Id<"messages">;
   _creationTime: number;
@@ -36,9 +28,4 @@ export interface MessageBubbleProps {
   };
   isOwn: boolean;
   showAvatar: boolean;
-}
-
-export interface MessageInputProps {
-  channelId: Id<"channels"> | null;
-  dmUserId: Id<"users"> | null;
 }
